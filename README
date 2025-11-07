@@ -5,6 +5,8 @@
 * Author: Marielle Cibella (mcibel01), Erica Huang (ehuang02)
 * Date: 4/7/25
 *******************************************************************************/
+DEFINITION NOTE: Uarray2 is a 2d unboxed array. DCT is Discrete Cosine Transform, which uses varaibles Y, Pb, and Pr.
+
 
 Acknowledgments:
 ---------------
