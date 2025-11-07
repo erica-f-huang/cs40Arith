@@ -1,0 +1,3 @@
+COMP40 Compressed image format 2
+2 2
+p8sjwiruhbg5263

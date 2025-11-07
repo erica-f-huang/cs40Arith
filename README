@@ -1,0 +1,97 @@
+/*******************************************************************************
+* Project 4 Arith
+* Comp 40 Spring 2025 
+* README
+* Author: Marielle Cibella (mcibel01), Erica Huang (ehuang02)
+* Date: 4/7/25
+*******************************************************************************/
+
+Acknowledgments:
+---------------
+
+For this project, we got help from the CS40 TAs during office hours 
+(Dan, Ben, Moizes, Amitas, Darya, Valerie, Amelia, and probably 
+others). We also used the course staff implemented uarray2, uarray2b, 
+a2blocked, and a2plain files as well as the Course coding standards
+to assist with style. 
+
+Implementation:
+---------------
+Note: we believe everything is implemented correctly
+
+- Compression: Reads a PPM image, trims it to even dimensions, converts RGB 
+  to YPbPr, applies DCT, and stores compressed words in a 32-bit format
+
+- Decompression: Reads compressed words, extracts pixel data, reverses DCT, 
+  converts YPbPr back to RGB, and reconstructs the original image
+
+- BitPacking: Implements all 6 bitpacking functions including, Bitpack_newu() 
+  and Bitpack_news() to store compressed values, Bitpack_getu() and 
+  Bitpack_gets() to extract them, and Bitpack_fitu() and Bitpack_fits() o 
+  verify if values fit within the specified bit width. We also created 4 
+  helper functions: shift_left(), shift_rightu(), shift_rights(), and mask(). 
+
+- File I/O: Reads and writes binary data for a compressed or decompressed image
+ 
+- Testing: Checked accuracy of our program by using ppmdiff.c and incrementally 
+           testing each step of our implementation thuroughly before moving on
+
+Architecture:
+---------------
+compression steps:
+        - read in a file and turn into a ppm image
+        - turn ppm image into an A2Methods_UArray2 of rgb pixels, where each
+                pixel is represented by a Pnm_rgb struct
+        - turn the A2Methods_UArray2 of rgb pixels into an A2Methods_UArray2 of
+                Y/Pb/Pr pixels, where each pixel is represented by a Y_Pb_Pr
+                struct (contains floats for the Y, Pb, and Pr values)
+        - turn the A2Methods_UArray2 of Y/Pb/Pr pixels into an A2Methods_UArray2
+                of words, where each word is represented by a word struct
+                (unsigned ints for Pb_avg, Pr_avg, and a. signed ints for b, c, 
+                and d)
+        - turn the A2Methods_UArray2 of word structs into an A2Methods_UArray2
+                of 32-bit words, where each word is represented by a uint32_t
+        - print the A2Methods_UArray2 of 32-bit words as a line of ASCII chars
+decompression steps:
+        - read in a file and turn into an A2Methods_UArray2 of 32-bit words
+        - turn the A2Methods_UArray2 of 32-bit words into an A2Methods_UArray2
+                of word structs
+        - turn the A2Methods_UArray2 of word structs into an A2Methods_UArray2
+                of Y/Pb/Pr pixels
+        - turn the A2Methods_UArray2 of Y/Pb/Pr pixels into an A2Methods_UArray2
+                of rgb pixels
+        - turn the A2Methods_UArray2 of rgb pixels into a ppm image and output
+                the image
+
+modules:
+        - compress40.c: given to us at the start of the project. Calls the
+                functions to compress and decompress the image, but doesn't
+                contain any code itself that compresses or decompresses
+        - read_write.c: reads and writes both compressed and decompressed
+                images. 
+                - compression: When reading a decompressed image, reads it into 
+                a Pnm_ppm. Trims image so width and height are even. When
+                outputting a compressed image, uses putchar() for each of the
+                4 bytes in each word
+                - decompression: When reading a compressed image, rads it into
+                an A2Methods_UArray2 of 32-bit words. When outputting a 
+                decompressed image, uses Pnm_write()
+        - ry_conversion.c: converts elements of A2Methods_UArray2 from Pnm_rgb
+                structs to Y_Pb_Pr structs or vice versa. Defines the "Y_Pb_Pr"
+                struct and includes getters/ setters so other modules can 
+                manipulate it how they need. Information is lost in the 
+                compression portion of this module due to converting rgb values
+                to Y/Pb/Pr values (floating point arithmetic).
+        - word.c: converts A2Methods_UArray2 of Y/Pb/Pr pixels into an
+                A2Methods_UArray2 of 32-bit words or nice versa. Defines a 
+                "word" struct that contains everything being packed into one
+                32-bit word. For compression, order of datatype conversion is
+                Y_Pb_Pr struct -> word struct -> 32-bit word. For decompresion
+                it is the opposite. 
+
+
+Hours Analyzing: 10
+---------------
+
+Hours Solving: 40 
+---------------
